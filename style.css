@@ -15,6 +15,111 @@ body { margin: 0; background: var(--ink); color: var(--paper); font: 16px/1.65 v
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
 img { display: block; max-width: 100%; }
+@font-face {
+  font-family: "Pinyon Script";
+  src: url("assets/pinyon-script-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+:root:has(#exhibition-opening[open]) { overflow: hidden; }
+#exhibition-opening {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: auto;
+  background: var(--ink);
+  color: var(--paper);
+}
+#exhibition-opening[open] {
+  display: grid;
+  animation: opening-dissolve .65s ease-in-out 2.35s forwards;
+}
+#exhibition-opening:not([open]) { display: none; }
+#exhibition-opening::backdrop { background: transparent; }
+#exhibition-opening[open]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/dark-silhouette-640.webp") center / 320px auto repeat;
+  filter: grayscale(1);
+  opacity: .13;
+  pointer-events: none;
+}
+.opening-layout {
+  position: relative;
+  display: grid;
+  grid-template: "heading" auto "prints" minmax(0, 1fr) "enter" auto / minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  align-self: center;
+  height: min(100%, 920px);
+  padding: max(18px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  gap: clamp(8px, 2vh, 20px);
+  background: repeating-linear-gradient(103deg, transparent 0 3px, rgb(233 231 215 / .025) 3px 4px);
+  animation: opening-appear .6s ease-out both;
+}
+.opening-heading { grid-area: heading; text-align: center; padding-top: 5px; }
+.opening-title {
+  margin: 0;
+  color: #e2dfcd;
+  font: 400 clamp(50px, min(20vw, 10vh), 94px)/.85 "Pinyon Script", "Snell Roundhand", Georgia, serif;
+}
+.opening-title > span { display: block; }
+.opening-title:focus { outline: none; }
+.opening-title > span:nth-child(2) { margin-left: .42em; }
+.opening-title .opening-year {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: #dbe2be;
+  font: 400 13px/1.2 var(--mono);
+  letter-spacing: .22em;
+}
+.opening-year::before, .opening-year::after { content: ""; width: 38px; height: 1px; background: currentColor; opacity: .48; }
+.opening-posters {
+  grid-area: prints;
+  width: min(100%, 425px);
+  height: 100%;
+  background: url("assets/opening-posters.webp") center / contain no-repeat;
+}
+.opening-enter {
+  grid-area: enter;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 4px 1px;
+  border-bottom: 1px solid #828873;
+  font-size: .85rem;
+}
+.opening-enter span { color: var(--lime); font-size: 1.1rem; }
+@keyframes opening-appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes opening-dissolve { to { opacity: 0; } }
+@media (min-aspect-ratio: 6/5) {
+  .opening-layout {
+    width: min(100%, 1200px);
+    height: min(100%, 900px);
+    justify-self: center;
+    grid-template: ". prints" 1fr "heading prints" auto "enter prints" auto ". prints" 1fr / 1.05fr 1fr;
+    column-gap: 5vw;
+    row-gap: 14px;
+    padding: 6vh 5vw;
+    background: none;
+  }
+  .opening-title { font-size: clamp(58px, min(9.8vw, 18vh), 148px); }
+  .opening-title .opening-year { margin-top: 28px; }
+  .opening-posters { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { #exhibition-opening[open], .opening-layout { animation: none; } }
 p, figure, h1, h2, dl, dd { margin: 0; }
 em, i { font-weight: 400; }
 button:focus-visible, a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }

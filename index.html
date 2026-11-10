@@ -16,6 +16,40 @@
   <script src="gallery.js" defer></script>
 </head>
 <body id="top">
+  <dialog id="exhibition-opening" aria-labelledby="opening-title">
+    <div class="opening-layout">
+      <div class="opening-heading">
+        <p class="opening-title" id="opening-title" lang="en" tabindex="-1" autofocus>
+          <span>Graduation</span> <span>exhibition</span> <span class="opening-year">2026</span>
+        </p>
+      </div>
+      <div class="opening-posters" aria-hidden="true"></div>
+      <button class="opening-enter" type="button">바로 입장 <span aria-hidden="true">→</span></button>
+    </div>
+  </dialog>
+  <script>
+    (() => {
+      const opening = document.getElementById('exhibition-opening');
+      const returning = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+      if (!opening.showModal || location.hash || returning || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      opening.showModal();
+      const close = () => { if (opening.open) opening.close(); };
+      // Also release the dialog if the stylesheet or animation is interrupted.
+      const fallback = setTimeout(close, 3200);
+      opening.addEventListener('animationend', event => {
+        if (event.target === opening && event.animationName === 'opening-dissolve') close();
+      });
+      opening.querySelector('button').addEventListener('click', close);
+      window.addEventListener('pagehide', close);
+      window.addEventListener('hashchange', close);
+      opening.addEventListener('close', () => {
+        clearTimeout(fallback);
+        window.removeEventListener('pagehide', close);
+        window.removeEventListener('hashchange', close);
+      }, { once: true });
+    })();
+  </script>
   <a class="skip-link" href="#works">작품 목록으로 건너뛰기</a>
   <header class="masthead">
     <div class="wrap header-inner">
