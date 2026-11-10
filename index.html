@@ -24,7 +24,6 @@
         </p>
       </div>
       <div class="opening-posters" aria-hidden="true"></div>
-      <button class="opening-enter" type="button">바로 입장 <span aria-hidden="true">→</span></button>
     </div>
   </dialog>
   <script>
@@ -36,11 +35,10 @@
       opening.showModal();
       const close = () => { if (opening.open) opening.close(); };
       // Also release the dialog if the stylesheet or animation is interrupted.
-      const fallback = setTimeout(close, 3200);
+      const fallback = setTimeout(close, 4000);
       opening.addEventListener('animationend', event => {
         if (event.target === opening && event.animationName === 'opening-dissolve') close();
       });
-      opening.querySelector('button').addEventListener('click', close);
       window.addEventListener('pagehide', close);
       window.addEventListener('hashchange', close);
       opening.addEventListener('close', () => {
